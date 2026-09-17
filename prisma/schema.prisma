@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id                       String   @id @default(cuid())
+  assetId                  String   @unique
+  name                     String
+  creatorName              String?
+  creatorId                String?
+  itemUrl                  String
+  rolimonsUrl              String?
+  thumbnailUrl             String?
+  price                    Int?
+  discoveredAt             DateTime
+  notifiedAt               DateTime?
+  notificationError       String?
+  notificationClaimId     String?
+  notificationClaimExpiresAt DateTime?
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  @@index([discoveredAt])
+  @@index([notifiedAt])
+}
+
+model TrackerState {
+  id            String   @id
+  status        String   @default("IDLE")
+  lastScanAt    DateTime?
+  nextScanAt    DateTime?
+  itemsFound    Int      @default(0)
+  itemsNotified Int      @default(0)
+  lastError     String?
+  lockId        String?
+  lockExpiresAt DateTime?
+  updatedAt     DateTime @updatedAt
+}

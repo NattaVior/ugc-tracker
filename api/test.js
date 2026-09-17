@@ -1,25 +1,9 @@
-// api/test.js
-// GET endpoint buat test Discord webhook
+import { authorized } from "../lib/security.js";
+import { testWebhook } from "../lib/discord.js";
 
 export default async function handler(req, res) {
-    const webhook = process.env.DISCORD_WEBHOOK;
-    if (!webhook) {
-        return res.status(400).json({ ok: false, error: 'DISCORD_WEBHOOK not set' });
-    }
-
-    try {
-        const testRes = await fetch(webhook, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                content: '✅ **UGC Tracker** berhasil terhubung! Notif bakal dikirim ke channel ini.',
-            }),
-        });
-        return res.status(200).json({
-            ok: testRes.ok || testRes.status === 204,
-            status: testRes.status,
-        });
-    } catch (e) {
-        return res.status(500).json({ ok: false, error: e.message });
-    }
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!authorized(req, "manual")) return res.status(401).json({ error: "Unauthorized" });
+  try { await testWebhook(); return res.status(200).json({ ok: true }); }
+  catch { return res.status(500).json({ ok: false, error: "Webhook test failed" }); }
 }
