@@ -1,0 +1,14 @@
+{
+  "name": "ugc-limited-tracker",
+  "version": "1.0.0",
+  "description": "Track UGC Limited gratis dari Roblox Catalog, kirim notif ke Discord",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
